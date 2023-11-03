@@ -11,8 +11,6 @@
 
 		<slot name="rooms-list-search">
 			<rooms-search
-				:rooms="rooms"
-				:loading-rooms="loadingRooms"
 				:text-messages="textMessages"
 				:show-search="showSearch"
 				:show-add-room="showAddRoom"

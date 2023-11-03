@@ -15,11 +15,10 @@
 						class="vac-state-circle"
 						:class="{ 'vac-state-online': userStatus === 'online' }"
 					/>
-					<slot :name="'room-list-info_' + room.roomId"></slot>
-						<div class="vac-room-name vac-text-ellipsis">
-							{{ room.roomName }}
-						</div>
-					</slot>
+					<slot :name="'room-list-info_' + room.roomId" />
+					<div class="vac-room-name vac-text-ellipsis">
+						{{ room.roomName }}
+					</div>
 					<div v-if="room.lastMessage" class="vac-text-date">
 						{{ room.lastMessage.timestamp }}
 					</div>
