@@ -50,7 +50,7 @@
 					:text-formatting="textFormatting"
 					:link-options="linkOptions"
 					:text-messages="textMessages"
-					:room-actions="roomActions"
+					:room-actions="fRoom.roomActions"
 					@room-action-handler="$emit('room-action-handler', $event)"
 				>
 					<template v-for="(idx, name) in $slots" #[name]="data">
@@ -101,7 +101,6 @@ export default {
 		roomsLoaded: { type: Boolean, required: true },
 		room: { type: Object, required: true },
 		customSearchRoomEnabled: { type: [Boolean, String], default: false },
-		roomActions: { type: Array, required: true },
 		scrollDistance: { type: Number, required: true }
 	},
 

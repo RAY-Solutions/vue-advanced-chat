@@ -42,7 +42,6 @@
 			:messages="JSON.stringify(messages)"
 			:messages-loaded="messagesLoaded"
 			:room-message="roomMessage"
-			:room-actions="JSON.stringify(roomActions)"
 			:menu-actions="JSON.stringify(menuActions)"
 			:message-selection-actions="JSON.stringify(messageSelectionActions)"
 			:templates-text="JSON.stringify(templatesText)"
@@ -81,9 +80,9 @@ import * as storageService from '@/database/storage'
 import { parseTimestamp, formatTimestamp } from '@/utils/dates'
 import logoAvatar from '@/assets/logo.png'
 
-import { register } from 'vue-advanced-chat'
+// import { register } from 'vue-advanced-chat'
 // import { register } from './../../dist/vue-advanced-chat.es.js'
-// import { register } from './../../src/lib/index.js'
+import { register } from './../../src/lib/index.js'
 register()
 
 export default {
@@ -285,7 +284,8 @@ export default {
 							new Date(room.lastUpdated.seconds),
 							room.lastUpdated
 						)
-					}
+					},
+					roomActions: this.roomActions
 				})
 			})
 
