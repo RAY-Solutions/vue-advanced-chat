@@ -232,8 +232,7 @@ Otherwise, you need to pass those props as strings. For example: `[messages]="JS
 | `messages`                          | [String, Array]  | -        | `[]`                                                                                                              |
 | `room-message`(7)                   | String           | -        | `null`                                                                                                            |
 | `username-options` (8)              | [String, Object] | -        | `{minUsers: 3, currentUser: false}`                                                                               |
-| `messages-loaded`(9)                | Boolean          | -        | `false`                                                                                                           |
-| `room-actions`(10)                  | [String, Array]  | -        | `[]`                                                                                                              |
+| `messages-loaded`(9)                | Boolean          | -        | `false`                                                                            `                                                                                                              |
 | `menu-actions`(11)                  | [String, Array]  | -        | `[]`                                                                                                              |
 | `message-actions`(12)               | [String, Array]  | -        | (11)                                                                                                              |
 | `message-selection-actions`(13)     | [String, Array]  | -        | (13)                                                                                                              |
@@ -286,18 +285,6 @@ Otherwise, you need to pass those props as strings. For example: `[messages]="JS
 **(8)** `username-options` can be used to show/hide room messages username according to the minimum number of users `minUsers` inside a room, and if the message user is the current user `currentUser`
 
 **(9)** `messages-loaded` must be set to `true` when all messages of a conversation have been loaded. Meaning the user cannot scroll on top to load more paginated messages
-
-**(10)** `room-actions` can be used to display your own buttons when clicking the dropdown icon of each room inside the rooms list.<br>
-You can then use the [room-action-handler](#events-api) event to call your own action after clicking a button. Ex:
-
-```javascript
-room-actions="[
-  {
-    name: 'archiveRoom',
-    title: 'Archive Room'
-  }
-]"
-```
 
 **(11)** `menu-actions` can be used to display your own buttons when clicking the vertical dots icon inside a room.<br>
 You can then use the [menu-action-handler](#events-api) event to call your own action after clicking a button. Ex:
@@ -518,47 +505,48 @@ Your props must follow a specific structure to display rooms and messages correc
 ### Rooms prop
 
 ```javascript
-rooms="[
-  {
+rooms="[{
     roomId: '1',
     roomName: 'Room 1',
     avatar: 'assets/imgs/people.png',
     unreadCount: 4,
     index: 3,
     lastMessage: {
-      _id: 'xyz',
-      content: 'Last message received',
-      senderId: '1234',
-      username: 'John Doe',
-      timestamp: '10:20',
-      saved: true,
-      distributed: false,
-      seen: false,
-      new: true
-    },
-    users: [
-      {
-        _id: '1234',
+        _id: 'xyz',
+        content: 'Last message received',
+        senderId: '1234',
         username: 'John Doe',
-        avatar: 'assets/imgs/doe.png',
-        status: {
-          state: 'online',
-          lastChanged: 'today, 14:30'
+        timestamp: '10:20',
+        saved: true,
+        distributed: false,
+        seen: false,
+        new: true
+    },
+    users: [{
+            _id: '1234',
+            username: 'John Doe',
+            avatar: 'assets/imgs/doe.png',
+            status: {
+                state: 'online',
+                lastChanged: 'today, 14:30'
+            }
+        },
+        {
+            _id: '4321',
+            username: 'John Snow',
+            avatar: 'assets/imgs/snow.png',
+            status: {
+                state: 'offline',
+                lastChanged: '14 July, 20:00'
+            }
         }
-      },
-      {
-        _id: '4321',
-        username: 'John Snow',
-        avatar: 'assets/imgs/snow.png',
-        status: {
-          state: 'offline',
-          lastChanged: '14 July, 20:00'
-        }
-      }
     ],
-    typingUsers: [ 4321 ]
-  }
-]"
+    typingUsers: [4321],
+    roomActions: [{
+        name: 'archiveRoom',
+        title: 'Archive Room'
+    }]
+}]"
 ```
 
 - If you add the `index` property, your rooms will be ordered using this value.
@@ -570,6 +558,18 @@ rooms="[
   - `lastChanged` is the date when `state` was last modified.
 
 - `typingUsers` is an array of all the users who are currently writing a message
+
+- `room-actions` can be used to display your own buttons when clicking the dropdown icon of each room inside the rooms list.<br>
+You can then use the [room-action-handler](#events-api) event to call your own action after clicking a button. Ex:
+
+```javascript
+room-actions="[
+  {
+    name: 'archiveRoom',
+    title: 'Archive Room'
+  }
+]"
+```
 
 ### Messages prop
 

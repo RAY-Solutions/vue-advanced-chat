@@ -8,7 +8,6 @@
 				:loading-rooms="loadingRoomsCasted"
 				:rooms-loaded="roomsLoadedCasted"
 				:room="room"
-				:room-actions="roomActionsCasted"
 				:custom-search-room-enabled="customSearchRoomEnabled"
 				:text-messages="t"
 				:show-search="showSearchCasted"
@@ -142,7 +141,6 @@ export default {
 		loadFirstRoom: { type: [Boolean, String], default: true },
 		messages: { type: [Array, String], default: () => [] },
 		messagesLoaded: { type: [Boolean, String], default: false },
-		roomActions: { type: [Array, String], default: () => [] },
 		menuActions: { type: [Array, String], default: () => [] },
 		messageActions: {
 			type: [Array, String],
@@ -347,9 +345,6 @@ export default {
 		},
 		messagesCasted() {
 			return this.castArray(this.messages)
-		},
-		roomActionsCasted() {
-			return this.castArray(this.roomActions)
 		},
 		menuActionsCasted() {
 			return this.castArray(this.menuActions)

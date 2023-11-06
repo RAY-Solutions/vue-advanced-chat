@@ -96,7 +96,10 @@
 							<transition v-if="roomActions.length" name="vac-slide-left">
 								<div
 									v-if="roomMenuOpened === room.roomId"
-									v-click-outside="closeRoomMenu"
+									v-click-outside="{
+										handler: closeRoomMenu,
+										capture: true
+									}"
 									class="vac-menu-options"
 								>
 									<div class="vac-menu-list">
@@ -144,7 +147,7 @@ export default {
 		textFormatting: { type: Object, required: true },
 		linkOptions: { type: Object, required: true },
 		textMessages: { type: Object, required: true },
-		roomActions: { type: Array, required: true }
+		roomActions: { type: Array, default: () => [] }
 	},
 
 	emits: ['room-action-handler'],
