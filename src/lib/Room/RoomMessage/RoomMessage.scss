@@ -26,6 +26,7 @@
 		padding: 8px 4px;
 		color: var(--chat-message-color-system);
 		background-color: var(--chat-message-bg-color-system);
+		font-weight: 500;
 	}
 
 	.vac-line-new {
@@ -174,7 +175,7 @@
 		font-size: 13px;
 		color: var(--chat-message-color-username);
 		margin-bottom: 2px;
-		font-weight: bold;
+		font-weight: 500;
 	}
 
 	.vac-username-reply {
