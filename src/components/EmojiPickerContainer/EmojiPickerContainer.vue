@@ -135,8 +135,6 @@ export default {
 			}
 
 			if (mobileSize) {
-				this.emojiPickerRight =
-					innerWidth / 2 - (this.positionTop ? 200 : 150) + 'px'
 				this.emojiPickerTop = 100
 				this.emojiPickerHeight = innerHeight - 200
 			} else {
