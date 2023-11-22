@@ -25,7 +25,7 @@
 			@click="$emit('add-room')"
 		>
 			<slot name="add-icon">
-				<svg-icon name="add" />
+				<svg-icon name="add" :width="28" :height="28" />
 			</slot>
 		</div>
 	</div>
