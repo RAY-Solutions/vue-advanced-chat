@@ -58,7 +58,14 @@
 						<slot name="room-header-info">
 							<div class="vac-text-ellipsis">
 								<div class="vac-room-name vac-text-ellipsis">
-									{{ room.roomName }}
+									<span>
+										{{ room.roomName }}
+									</span>
+									<img
+										v-if="roomInfoEnabled && room.roomName"
+										src="../../../assets/edit.svg"
+										alt="edit icon"
+									/>
 								</div>
 								<div v-if="typingUsers" class="vac-room-info vac-text-ellipsis">
 									{{ typingUsers }}
