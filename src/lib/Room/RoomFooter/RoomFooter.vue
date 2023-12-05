@@ -436,6 +436,7 @@ export default {
 			} else this.resetMessage()
 		},
 		onPasteImage(pasteEvent) {
+			if (!this.showFiles) return
 			const items = pasteEvent.clipboardData?.items
 
 			if (items) {

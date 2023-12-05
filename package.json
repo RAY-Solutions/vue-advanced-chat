@@ -1,6 +1,6 @@
 {
 	"name": "@ray-solutions/vue-advanced-chat",
-	"version": "2.1.4",
+	"version": "2.1.8",
 	"license": "MIT",
 	"description": "A beautiful chat rooms component made with Vue.js - compatible with Vue, React & Angular",
 	"author": {
