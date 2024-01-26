@@ -14,32 +14,36 @@
 				</template>
 			</message-file>
 		</div>
-
-		<div
-			v-for="(file, i) in otherFiles"
-			:key="i + 'a'"
-			class="vac-file-wrapper"
-		>
-			<progress-bar
-				v-if="file.progress >= 0"
-				:progress="file.progress"
-				:style="{ top: '44px' }"
-			/>
+		<div class="vac-other-files-container">
 			<div
-				class="vac-file-container"
-				:class="{ 'vac-file-container-progress': file.progress >= 0 }"
-				@click="openFile($event, file, 'download')"
+				v-for="(file, i) in otherFiles"
+				:key="i + 'a'"
+				class="vac-file-wrapper"
 			>
-				<div class="vac-svg-button">
-					<slot name="document-icon">
-						<svg-icon name="document" />
-					</slot>
-				</div>
-				<div class="vac-text-ellipsis">
-					{{ file.name }}
-				</div>
-				<div v-if="file.extension" class="vac-text-ellipsis vac-text-extension">
-					{{ file.extension }}
+				<progress-bar
+					v-if="file.progress >= 0"
+					:progress="file.progress"
+					:style="{ top: '44px' }"
+				/>
+				<div
+					class="vac-file-container"
+					:class="{ 'vac-file-container-progress': file.progress >= 0 }"
+					@click="openFile($event, file, 'download')"
+				>
+					<div class="vac-svg-button">
+						<slot name="document-icon">
+							<svg-icon name="document" />
+						</slot>
+					</div>
+					<div class="vac-text-ellipsis">
+						{{ ellipsisInMiddle(file.name) }}
+					</div>
+					<div
+						v-if="file.extension || file.size"
+						class="vac-text-ellipsis vac-text-extension"
+					>
+						{{ fileMetaData(file) }}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -63,6 +67,9 @@ import ProgressBar from '../../../../components/ProgressBar/ProgressBar'
 import MessageFile from './MessageFile/MessageFile'
 
 import { isImageVideoFile } from '../../../../utils/media-file'
+
+import { ellipsisInMiddle } from '../../../../utils/ellipsis-in-middle'
+import { humanFileSize } from '../../../../utils/human-file-size'
 
 export default {
 	name: 'MessageFiles',
@@ -94,7 +101,17 @@ export default {
 				event.stopPropagation()
 				this.$emit('open-file', { file, action })
 			}
-		}
+		},
+		fileMetaData(file) {
+			if (file.extension && file.size) {
+				return `${file.extension} | ${humanFileSize(file.size)}`
+			} else if (file.extension) {
+				return file.extension
+			} else if (file.size) {
+				return humanFileSize(file.size)
+			}
+		},
+		ellipsisInMiddle: ellipsisInMiddle
 	}
 }
 </script>
