@@ -38,13 +38,13 @@
 				</slot>
 			</div>
 			<div class="vac-text-ellipsis">
-				{{ firstFile.name }}
+				{{ ellipsisInMiddle(firstFile.name) }}
 			</div>
 			<div
-				v-if="firstFile.extension"
+				v-if="firstFile.extension || firstFile.size"
 				class="vac-text-ellipsis vac-text-extension"
 			>
-				{{ firstFile.extension }}
+				{{ fileMetaData(firstFile) }}
 			</div>
 		</div>
 
@@ -72,6 +72,8 @@ import {
 	isImageFile,
 	isVideoFile
 } from '../../../../utils/media-file'
+import { ellipsisInMiddle } from '../../../../utils/ellipsis-in-middle'
+import { humanFileSize } from '../../../../utils/human-file-size'
 
 export default {
 	name: 'MessageReply',
@@ -112,6 +114,19 @@ export default {
 				!this.isImage
 			)
 		}
+	},
+
+	methods: {
+		fileMetaData(file) {
+			if (file.extension && file.size) {
+				return `${file.extension} | ${humanFileSize(file.size)}`
+			} else if (file.extension) {
+				return file.extension
+			} else if (file.size) {
+				return humanFileSize(file.size)
+			}
+		},
+		ellipsisInMiddle: ellipsisInMiddle
 	}
 }
 </script>

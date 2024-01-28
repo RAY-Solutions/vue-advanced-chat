@@ -55,7 +55,10 @@
 
 		<div
 			class="vac-box-footer"
-			:class="{ 'vac-box-footer-border': !files.length }"
+			:class="{
+				'vac-box-footer-border': !files.length,
+				'vac-footer-disabled': disableFooter
+			}"
 		>
 			<div v-if="showAudio && !files.length" class="vac-icon-textarea-left">
 				<template v-if="isRecording">
@@ -100,6 +103,7 @@
 					'min-height': `20px`,
 					'padding-left': `12px`
 				}"
+				:disabled="disableFooter"
 				@input="onChangeInput"
 				@keydown.esc="escapeTextarea"
 				@keydown.enter.exact.prevent="selectItem"
@@ -247,7 +251,8 @@ export default {
 		initReplyMessage: { type: Object, default: null },
 		initEditMessage: { type: Object, default: null },
 		droppedFiles: { type: Array, default: null },
-		emojiDataSource: { type: String, default: undefined }
+		emojiDataSource: { type: String, default: undefined },
+		disableFooter: { type: Boolean, default: false }
 	},
 
 	emits: [
@@ -349,6 +354,7 @@ export default {
 		let isComposed = true
 
 		this.getTextareaRef().addEventListener('keyup', e => {
+			if (this.disableFooter) return
 			if (e.key === 'Enter' && !e.shiftKey && !this.fileDialog) {
 				if (isMobile) {
 					this.message = this.message + '\n'
@@ -436,7 +442,7 @@ export default {
 			} else this.resetMessage()
 		},
 		onPasteImage(pasteEvent) {
-			if (!this.showFiles) return
+			if (!this.showFiles || this.disableFooter) return
 			const items = pasteEvent.clipboardData?.items
 
 			if (items) {
@@ -590,6 +596,7 @@ export default {
 			this.$emit('textarea-action-handler', this.message)
 		},
 		sendMessage() {
+			if (this.disableFooter) return
 			let message = this.message.trim()
 
 			if (!this.files.length && !message) return

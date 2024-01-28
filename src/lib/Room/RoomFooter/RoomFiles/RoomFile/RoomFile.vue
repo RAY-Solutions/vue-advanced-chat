@@ -43,10 +43,13 @@
 				</slot>
 			</div>
 			<div class="vac-text-ellipsis">
-				{{ file.name }}
+				{{ ellipsisInMiddle(file.name) }}
 			</div>
-			<div v-if="file.extension" class="vac-text-ellipsis vac-text-extension">
-				{{ file.extension }}
+			<div
+				v-if="file.extension || file.size"
+				class="vac-text-ellipsis vac-text-extension"
+			>
+				{{ fileMetaData(file) }}
 			</div>
 		</div>
 	</div>
@@ -57,6 +60,8 @@ import Loader from '../../../../../components/Loader/Loader'
 import SvgIcon from '../../../../../components/SvgIcon/SvgIcon'
 
 import { isImageFile, isVideoFile } from '../../../../../utils/media-file'
+import { ellipsisInMiddle } from '../../../../../utils/ellipsis-in-middle'
+import { humanFileSize } from '../../../../../utils/human-file-size'
 
 export default {
 	name: 'RoomFiles',
@@ -79,6 +84,19 @@ export default {
 		isVideo() {
 			return isVideoFile(this.file)
 		}
+	},
+
+	methods: {
+		fileMetaData(file) {
+			if (file.extension && file.size) {
+				return `${file.extension} | ${humanFileSize(file.size)}`
+			} else if (file.extension) {
+				return file.extension
+			} else if (file.size) {
+				return humanFileSize(file.size)
+			}
+		},
+		ellipsisInMiddle: ellipsisInMiddle
 	}
 }
 </script>
