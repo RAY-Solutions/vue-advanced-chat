@@ -155,7 +155,7 @@
 			:init-edit-message="initEditMessage"
 			:dropped-files="droppedFiles"
 			:emoji-data-source="emojiDataSource"
-			:disable-footer="disableFooter"
+			:disable-sending="disableSending"
 			@update-edited-message-id="editedMessageId = $event"
 			@edit-message="$emit('edit-message', $event)"
 			@send-message="$emit('send-message', $event)"
@@ -227,7 +227,7 @@ export default {
 		templatesText: { type: Array, default: null },
 		usernameOptions: { type: Object, required: true },
 		emojiDataSource: { type: String, default: undefined },
-		disableFooter: { type: Boolean, default: false }
+		disableSending: { type: Boolean, default: false }
 	},
 
 	emits: [
