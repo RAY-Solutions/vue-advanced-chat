@@ -119,9 +119,11 @@ export default {
 	methods: {
 		fileMetaData(file) {
 			if (file.extension && file.size) {
-				return `${file.extension} | ${humanFileSize(file.size)}`
+				return `${ellipsisInMiddle(file.extension)} | ${humanFileSize(
+					file.size
+				)}`
 			} else if (file.extension) {
-				return file.extension
+				return ellipsisInMiddle(file.extension)
 			} else if (file.size) {
 				return humanFileSize(file.size)
 			}
