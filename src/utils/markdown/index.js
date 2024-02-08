@@ -1,39 +1,36 @@
-import { micromark } from 'micromark'
-import { gfm, gfmHtml } from 'micromark-extension-gfm'
-import { underline, underlineHtml } from './underline'
-import { usertag, usertagHtml } from './usertag'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import rehypeStringify from 'rehype-stringify'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeExternalLinks from 'rehype-external-links'
+import usertag from './usertag'
 
 export default (text, { textFormatting }) => {
 	if (textFormatting) {
-		let gfmDisabled = []
-
-		if (!textFormatting.linkify) {
-			gfmDisabled = ['literalAutolink', 'literalAutolinkEmail']
-		}
-
-		const markdown = micromark(
-			text.replaceAll('<usertag>', '<@').replaceAll('</usertag>', '>'),
-			{
-				extensions: [
-					{
-						...gfm(),
-						disable: { null: gfmDisabled }
-					},
-					underline,
-					usertag
-				],
-				htmlExtensions: [
-					gfmHtml(),
-					underlineHtml,
-					usertagHtml(textFormatting.users)
-				]
-			}
-		)
-
+		const markdown = unified()
+			.use(remarkParse)
+			.use(usertag, textFormatting.users)
+			.use(remarkRehype, { allowDangerousHtml: true })
+			.use(rehypeStringify, {
+				allowDangerousHtml: true
+			})
+			.use(remarkGfm)
+			.use(remarkMath)
+			.use(rehypeKatex)
+			.use(rehypeExternalLinks, {
+				target: '_blank',
+				rel: ['noopener', 'noreferrer']
+			})
+			.processSync(
+				text.replaceAll('<usertag>', '<#').replaceAll('</usertag>', '>')
+			)
 		if (textFormatting.singleLine) {
 			const element = document.createElement('div')
 
-			element.innerHTML = markdown
+			element.innerHTML = markdown.value
 
 			return [
 				{
@@ -42,11 +39,10 @@ export default (text, { textFormatting }) => {
 				}
 			]
 		}
-
 		return [
 			{
 				types: ['markdown'],
-				value: markdown
+				value: markdown.value
 			}
 		]
 	}

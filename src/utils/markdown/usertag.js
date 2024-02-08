@@ -1,84 +1,51 @@
-import { codes } from './constants'
+import { visit } from 'unist-util-visit'
+export default function usertag(users) {
+	return tree => {
+		visit(tree, 'text', (node, index, parent) => {
+			const matches = [] // Use a regex to find all occurrences of your custom syntax
+			const regex = /<#([a-zA-Z0-9]+)>/g
+			let match
 
-const usertagTokenize = (effects, ok, nok) => {
-	const inside = code => {
-		if (
-			code === codes.carriageReturn ||
-			code === codes.lineFeed ||
-			code === codes.carriageReturnLineFeed ||
-			code === codes.eof
-		) {
-			return nok(code)
-		}
+			while ((match = regex.exec(node.value)) !== null) {
+				matches.push({
+					index: match.index,
+					lastIndex: regex.lastIndex,
+					userId: match[1]
+				})
+			}
 
-		if (code === codes.backslash) {
-			effects.consume(code)
+			if (matches.length > 0) {
+				// Split the text node into multiple nodes, inserting your custom nodes for user tags
+				const nodes = []
+				let startIndex = 0
 
-			return insideEscape
-		}
+				matches.forEach(match => {
+					if (startIndex !== match.index) {
+						// Add the text before the match as a new text node
+						nodes.push({
+							type: 'text',
+							value: node.value.slice(startIndex, match.index)
+						})
+					}
 
-		if (code === codes.greaterThan) {
-			effects.exit('usertagContent')
-			effects.enter('usertagMarker')
-			effects.consume(code)
-			effects.exit('usertagMarker')
-			effects.exit('usertag')
+					// Add your custom node for the user tag
+					const user = users.find(user => user._id === match.userId)
+					const username = user ? user.username : match.userId
+					nodes.push({
+						type: 'html',
+						value: `<span class="vac-text-tag" data-user-id="${match.userId}">@${username}</span>`
+					})
 
-			return ok
-		}
+					startIndex = match.lastIndex
+				})
+				// Add any remaining text as a new text node
+				if (startIndex < node.value.length) {
+					nodes.push({ type: 'text', value: node.value.slice(startIndex) })
+				}
 
-		effects.consume(code)
-
-		return inside
-	}
-
-	const insideEscape = code => {
-		if (code === codes.backslash || code === codes.greaterThan) {
-			effects.consume(code)
-
-			return inside
-		}
-
-		return inside(code)
-	}
-
-	const begin = code => {
-		if (code === codes.atSign) {
-			effects.consume(code)
-			effects.exit('usertagMarker')
-			effects.enter('usertagContent')
-
-			return inside
-		}
-
-		return nok(code)
-	}
-
-	return code => {
-		effects.enter('usertag')
-		effects.enter('usertagMarker')
-		effects.consume(code)
-
-		return begin
+				// Replace the original text node with the sequence of new nodes
+				parent.children.splice(index, 1, ...nodes)
+			}
+		})
 	}
 }
-
-const usertagConstruct = { name: 'usertag', tokenize: usertagTokenize }
-
-export const usertag = { text: { 60: usertagConstruct } } // 60 is the less than sign
-
-export const usertagHtml = users => ({
-	exit: {
-		usertagContent(token) {
-			const userId = this.sliceSerialize(token)
-
-			this.tag(`<span class="vac-text-tag" data-user-id="${userId}">`)
-
-			const user = users.find(user => user._id === userId)
-
-			this.raw(`@${this.encode(user ? user.username : userId)}`)
-
-			this.tag('</span>')
-		}
-	}
-})
