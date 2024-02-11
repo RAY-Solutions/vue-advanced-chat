@@ -1,6 +1,6 @@
 {
 	"name": "@ray-solutions/vue-advanced-chat",
-	"version": "2.2.6",
+	"version": "2.2.7",
 	"license": "MIT",
 	"description": "A beautiful chat rooms component made with Vue.js - compatible with Vue, React & Angular",
 	"author": {
@@ -71,7 +71,9 @@
 	"dependencies": {
 		"emoji-picker-element": "1.12.1",
 		"rehype-external-links": "^3.0.0",
+		"rehype-highlight": "^7.0.0",
 		"rehype-katex": "^7.0.0",
+		"rehype-minify-whitespace": "^6.0.0",
 		"rehype-stringify": "^10.0.0",
 		"remark": "^15.0.1",
 		"remark-gfm": "^4.0.0",
