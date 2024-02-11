@@ -135,14 +135,9 @@
 	transform: none !important;
 }
 
-.vac-footer-disabled,
-.vac-footer-disabled svg {
-	cursor: none !important;
-	pointer-events: none !important;
-	transform: none !important;
-	#roomTextarea {
-		opacity: 0.5 !important;
-	}
+.vac-disable-sending:disabled {
+	background-color: #eee !important;
+	cursor: not-allowed !important;
 }
 
 @media only screen and (max-width: 768px) {

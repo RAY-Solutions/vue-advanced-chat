@@ -39,7 +39,7 @@
 					:name="'message-avatar_' + message._id"
 				>
 					<div
-            v-if="message.avatar"
+						v-if="message.avatar"
 						class="vac-avatar"
 						:style="{ 'background-image': `url('${message.avatar}')` }"
 					/>
@@ -123,6 +123,20 @@
 						</message-files>
 
 						<template v-else>
+							<format-message
+								:message-id="message._id"
+								:content="message.content"
+								:deleted="!!message.deleted"
+								:users="roomUsers"
+								:text-formatting="textFormatting"
+								:text-messages="textMessages"
+								:link-options="linkOptions"
+								@open-user-tag="openUserTag"
+							>
+								<template v-for="(idx, name) in $slots" #[name]="data">
+									<slot :name="name" v-bind="data" />
+								</template>
+							</format-message>
 							<audio-player
 								:message-id="message._id"
 								:src="message.files[0].url"
@@ -208,7 +222,7 @@
 					:name="'message-avatar_' + message._id"
 				>
 					<div
-            v-if="message.avatar"
+						v-if="message.avatar"
 						class="vac-avatar vac-avatar-current"
 						:style="{ 'background-image': `url('${message.avatar}')` }"
 					/>

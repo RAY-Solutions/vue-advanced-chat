@@ -56,8 +56,7 @@
 		<div
 			class="vac-box-footer"
 			:class="{
-				'vac-box-footer-border': !files.length,
-				'vac-footer-disabled': disableFooter
+				'vac-box-footer-border': !files.length
 			}"
 		>
 			<div v-if="showAudio && !files.length" class="vac-icon-textarea-left">
@@ -97,13 +96,14 @@
 				:placeholder="textMessages.TYPE_MESSAGE"
 				class="vac-textarea"
 				:class="{
-					'vac-textarea-outline': editedMessage._id
+					'vac-textarea-outline': editedMessage._id,
+					'vac-disable-sending': disableSending
 				}"
 				:style="{
 					'min-height': `20px`,
 					'padding-left': `12px`
 				}"
-				:disabled="disableFooter"
+				:disabled="disableSending"
 				@input="onChangeInput"
 				@keydown.esc="escapeTextarea"
 				@keydown.enter.exact.prevent="selectItem"
@@ -175,13 +175,17 @@
 				<div
 					v-if="showSendIcon"
 					class="vac-svg-button"
-					:class="{ 'vac-send-disabled': isMessageEmpty }"
+					:class="{ 'vac-send-disabled': isMessageEmpty || disableSending }"
 					@click="sendMessage"
 				>
 					<slot name="send-icon">
 						<svg-icon
 							name="send"
-							:param="isMessageEmpty || isFileLoading ? 'disabled' : ''"
+							:param="
+								isMessageEmpty || isFileLoading || disableSending
+									? 'disabled'
+									: ''
+							"
 						/>
 					</slot>
 				</div>
@@ -252,7 +256,7 @@ export default {
 		initEditMessage: { type: Object, default: null },
 		droppedFiles: { type: Array, default: null },
 		emojiDataSource: { type: String, default: undefined },
-		disableFooter: { type: Boolean, default: false }
+		disableSending: { type: Boolean, default: false }
 	},
 
 	emits: [
@@ -354,7 +358,7 @@ export default {
 		let isComposed = true
 
 		this.getTextareaRef().addEventListener('keyup', e => {
-			if (this.disableFooter) return
+			if (this.disableSending) return
 			if (e.key === 'Enter' && !e.shiftKey && !this.fileDialog) {
 				if (isMobile) {
 					this.message = this.message + '\n'
@@ -442,7 +446,7 @@ export default {
 			} else this.resetMessage()
 		},
 		onPasteImage(pasteEvent) {
-			if (!this.showFiles || this.disableFooter) return
+			if (!this.showFiles) return
 			const items = pasteEvent.clipboardData?.items
 
 			if (items) {
@@ -513,6 +517,7 @@ export default {
 			this.focusTextarea()
 		},
 		addEmoji(emoji) {
+			if (this.disableSending) return
 			this.message += emoji.unicode
 			this.focusTextarea(true)
 		},
@@ -596,7 +601,7 @@ export default {
 			this.$emit('textarea-action-handler', this.message)
 		},
 		sendMessage() {
-			if (this.disableFooter) return
+			if (this.disableSending) return
 			let message = this.message.trim()
 
 			if (!this.files.length && !message) return

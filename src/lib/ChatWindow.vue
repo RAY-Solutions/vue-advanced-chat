@@ -69,7 +69,7 @@
 				:templates-text="templatesTextCasted"
 				:username-options="usernameOptionsCasted"
 				:emoji-data-source="emojiDataSource"
-				:disable-footer="disableFooterCasted"
+				:disable-sending="disableSendingCasted"
 				@toggle-rooms-list="toggleRoomsList"
 				@room-info="roomInfo"
 				@fetch-messages="fetchMessages"
@@ -207,7 +207,7 @@ export default {
 			default: () => ({ minUsers: 3, currentUser: false })
 		},
 		emojiDataSource: { type: String, default: undefined },
-		disableFooter: { type: [Boolean, String], default: false }
+		disableSending: { type: [Boolean, String], default: false }
 	},
 
 	emits: [
@@ -378,8 +378,8 @@ export default {
 		usernameOptionsCasted() {
 			return this.castObject(this.usernameOptions)
 		},
-		disableFooterCasted() {
-			return this.castBoolean(this.disableFooter)
+		disableSendingCasted() {
+			return this.castBoolean(this.disableSending)
 		}
 	},
 
