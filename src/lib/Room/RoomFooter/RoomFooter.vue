@@ -45,6 +45,8 @@
 
 		<room-files
 			:files="files"
+			:is-file-limit-exceeded="isFileLimitExceeded"
+			:max-files="maxFiles"
 			@remove-file="removeFile"
 			@reset-message="resetMessage"
 		>
@@ -256,7 +258,8 @@ export default {
 		initEditMessage: { type: Object, default: null },
 		droppedFiles: { type: Array, default: null },
 		emojiDataSource: { type: String, default: undefined },
-		disableSending: { type: Boolean, default: false }
+		disableSending: { type: Boolean, default: false },
+		maxFiles: { type: Number, default: 20 }
 	},
 
 	emits: [
@@ -290,7 +293,8 @@ export default {
 			selectedUsersTag: [],
 			filteredTemplatesText: [],
 			recorder: this.initRecorder(),
-			isRecording: false
+			isRecording: false,
+			isFileLimitExceeded: false
 		}
 	},
 
@@ -350,6 +354,16 @@ export default {
 			if (val) {
 				this.onFileChange(val)
 			}
+		},
+		files: {
+			handler(val) {
+				if (val.length > this.maxFiles) {
+					this.isFileLimitExceeded = true
+					setTimeout(() => (this.isFileLimitExceeded = false), 3000)
+					this.files = val.slice(0, this.maxFiles)
+				}
+			},
+			deep: true
 		}
 	},
 
@@ -824,6 +838,7 @@ export default {
 			this.messageReply = null
 			this.files = []
 			this.emojiOpened = false
+			this.isFileLimitExceeded = false
 			this.preventKeyboardFromClosing()
 
 			if (this.textareaAutoFocus || !initRoom) {
