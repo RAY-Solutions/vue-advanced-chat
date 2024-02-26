@@ -5,7 +5,9 @@
 				v-if="isFileLimitExceeded"
 				class="vac-room-file_limit-exceeded-warning"
 			>
-				<svg-icon class="vac-icon-warning" name="warning" />
+				<div>
+					<svg-icon class="vac-icon-warning" name="warning" />
+				</div>
 				Sorry, only {{ maxFiles }} files are allowed to be uploaded at a time.
 				We've automatically adjusted your selection to fit this limit.
 			</div>
