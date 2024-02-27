@@ -25,6 +25,23 @@
 		}
 	}
 }
+.vac-room-file_limit-exceeded-warning {
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+	padding: 10px 6px 0 6px;
+	background: var(--chat-footer-bg-color);
+	.vac-icon-warning {
+		margin-right: 10px;
+		path {
+			fill: none;
+			stroke: #000;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 32px;
+		}
+	}
+}
 
 @media only screen and (max-width: 768px) {
 	.vac-files-container {

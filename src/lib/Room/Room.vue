@@ -156,6 +156,7 @@
 			:dropped-files="droppedFiles"
 			:emoji-data-source="emojiDataSource"
 			:disable-sending="disableSending"
+			:max-files="maxFiles"
 			@update-edited-message-id="editedMessageId = $event"
 			@edit-message="$emit('edit-message', $event)"
 			@send-message="$emit('send-message', $event)"
@@ -227,7 +228,8 @@ export default {
 		templatesText: { type: Array, default: null },
 		usernameOptions: { type: Object, required: true },
 		emojiDataSource: { type: String, default: undefined },
-		disableSending: { type: Boolean, default: false }
+		disableSending: { type: Boolean, default: false },
+		maxFiles: { type: Number, default: 20 }
 	},
 
 	emits: [

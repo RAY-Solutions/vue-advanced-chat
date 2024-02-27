@@ -70,6 +70,7 @@
 				:username-options="usernameOptionsCasted"
 				:emoji-data-source="emojiDataSource"
 				:disable-sending="disableSendingCasted"
+				:max-files="maxFilesCasted"
 				@toggle-rooms-list="toggleRoomsList"
 				@room-info="roomInfo"
 				@fetch-messages="fetchMessages"
@@ -207,7 +208,8 @@ export default {
 			default: () => ({ minUsers: 3, currentUser: false })
 		},
 		emojiDataSource: { type: String, default: undefined },
-		disableSending: { type: [Boolean, String], default: false }
+		disableSending: { type: [Boolean, String], default: false },
+		maxFiles: { type: Number, default: 20 }
 	},
 
 	emits: [
@@ -380,6 +382,9 @@ export default {
 		},
 		disableSendingCasted() {
 			return this.castBoolean(this.disableSending)
+		},
+		maxFilesCasted() {
+			return Number(this.maxFiles)
 		}
 	},
 
