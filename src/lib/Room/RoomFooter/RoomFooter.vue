@@ -359,7 +359,6 @@ export default {
 			handler(val) {
 				if (val.length > this.maxFiles) {
 					this.isFileLimitExceeded = true
-					setTimeout(() => (this.isFileLimitExceeded = false), 3000)
 					this.files = val.slice(0, this.maxFiles)
 				}
 			},
