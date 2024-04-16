@@ -181,7 +181,13 @@
 	.vac-username-reply {
 		margin-bottom: 5px;
 	}
-
+	.vac-message-footer {
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 2px;
+	}
 	.vac-text-timestamp {
 		font-size: 10px;
 		color: var(--chat-message-color-timestamp);
@@ -218,6 +224,15 @@
 		width: 14px;
 		vertical-align: middle;
 		margin: -3px -3px 0 3px;
+	}
+
+	.vac-copy-message-link {
+		svg {
+			fill: var(--chat-message-color-timestamp);
+			cursor: pointer;
+			width: 17px;
+			height: 17px;
+		}
 	}
 
 	@media only screen and (max-width: 768px) {

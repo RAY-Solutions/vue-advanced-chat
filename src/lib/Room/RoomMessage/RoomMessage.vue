@@ -29,6 +29,7 @@
 
 		<div
 			v-else
+			ref="inputToCopy"
 			class="vac-message-box"
 			:class="{ 'vac-offset-current': message.senderId === currentUserId }"
 			@click="selectMessage"
@@ -100,6 +101,7 @@
 							:text-messages="textMessages"
 							:link-options="linkOptions"
 							@open-user-tag="openUserTag"
+							@message-updated="$emit('message-updated', $event)"
 						>
 							<template v-for="(idx, name) in $slots" #[name]="data">
 								<slot :name="name" v-bind="data" />
@@ -132,6 +134,7 @@
 								:text-messages="textMessages"
 								:link-options="linkOptions"
 								@open-user-tag="openUserTag"
+								@message-updated="$emit('message-updated', $event)"
 							>
 								<template v-for="(idx, name) in $slots" #[name]="data">
 									<slot :name="name" v-bind="data" />
@@ -154,27 +157,37 @@
 							</div>
 						</template>
 
-						<div class="vac-text-timestamp">
-							<div
-								v-if="message.edited && !message.deleted"
-								class="vac-icon-edited"
-							>
-								<slot :name="'pencil-icon_' + message._id">
-									<svg-icon name="pencil" />
-								</slot>
+						<div class="vac-message-footer">
+							<div class="vac-text-timestamp">
+								<div
+									v-if="message.edited && !message.deleted"
+									class="vac-icon-edited"
+								>
+									<slot :name="'pencil-icon_' + message._id">
+										<svg-icon name="pencil" />
+									</slot>
+								</div>
+								<span>{{ message.timestamp }}</span>
+								<span v-if="isCheckmarkVisible">
+									<slot :name="'checkmark-icon_' + message._id">
+										<svg-icon
+											:name="
+												message.distributed ? 'double-checkmark' : 'checkmark'
+											"
+											:param="message.seen ? 'seen' : ''"
+											class="vac-icon-check"
+										/>
+									</slot>
+								</span>
 							</div>
-							<span>{{ message.timestamp }}</span>
-							<span v-if="isCheckmarkVisible">
-								<slot :name="'checkmark-icon_' + message._id">
-									<svg-icon
-										:name="
-											message.distributed ? 'double-checkmark' : 'checkmark'
-										"
-										:param="message.seen ? 'seen' : ''"
-										class="vac-icon-check"
-									/>
-								</slot>
-							</span>
+							<div
+								v-if="allowCopy && message.senderId !== currentUserId"
+								class="vac-copy-message-link"
+								@click.prevent="copyText"
+							>
+								<svg-icon v-if="copied" name="check" />
+								<svg-icon v-else name="copy" />
+							</div>
 						</div>
 
 						<message-actions
@@ -278,7 +291,8 @@ export default {
 		usernameOptions: { type: Object, required: true },
 		messageSelectionEnabled: { type: Boolean, required: true },
 		selectedMessages: { type: Array, default: () => [] },
-		emojiDataSource: { type: String, default: undefined }
+		emojiDataSource: { type: String, default: undefined },
+		allowCopy: { type: Boolean, required: true }
 	},
 
 	emits: [
@@ -289,7 +303,8 @@ export default {
 		'message-action-handler',
 		'send-message-reaction',
 		'select-message',
-		'unselect-message'
+		'unselect-message',
+		'message-updated'
 	],
 
 	data() {
@@ -300,7 +315,8 @@ export default {
 			emojiOpened: false,
 			newMessage: {},
 			progressTime: '- : -',
-			hoverAudioProgress: false
+			hoverAudioProgress: false,
+			copied: false
 		}
 	},
 
@@ -442,6 +458,20 @@ export default {
 					this.$emit('select-message', this.message)
 				}
 			}
+		},
+		copyText() {
+			const vm = this
+			vm.copied = true
+			const element =
+				this.$refs?.inputToCopy?.getElementsByClassName('markdown')?.[0] ||
+				this.$refs?.inputToCopy?.getElementsByClassName(
+					'vac-format-message-wrapper'
+				)?.[0]
+			navigator.clipboard.writeText(element.innerText).then(() => {
+				setTimeout(() => {
+					vm.copied = false
+				}, 500)
+			})
 		}
 	}
 }

@@ -71,6 +71,7 @@
 				:emoji-data-source="emojiDataSource"
 				:disable-sending="disableSendingCasted"
 				:max-files="maxFilesCasted"
+				:allow-copy="allowCopyCasted"
 				@toggle-rooms-list="toggleRoomsList"
 				@room-info="roomInfo"
 				@fetch-messages="fetchMessages"
@@ -209,7 +210,8 @@ export default {
 		},
 		emojiDataSource: { type: String, default: undefined },
 		disableSending: { type: [Boolean, String], default: false },
-		maxFiles: { type: Number, default: 20 }
+		maxFiles: { type: Number, default: 20 },
+		allowCopy: { type: [Boolean, String], default: false }
 	},
 
 	emits: [
@@ -385,6 +387,9 @@ export default {
 		},
 		maxFilesCasted() {
 			return Number(this.maxFiles)
+		},
+		allowCopyCasted() {
+			return this.castBoolean(this.allowCopy)
 		}
 	},
 

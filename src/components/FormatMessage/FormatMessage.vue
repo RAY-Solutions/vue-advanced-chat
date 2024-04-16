@@ -89,7 +89,7 @@ export default {
 		linkOptions: { type: Object, required: true }
 	},
 
-	emits: ['open-user-tag'],
+	emits: ['open-user-tag', 'message-updated'],
 
 	computed: {
 		parsedMessage() {
@@ -122,6 +122,11 @@ export default {
 			})
 
 			return message
+		}
+	},
+	watch: {
+		content(value) {
+			this.$emit('message-updated', value)
 		}
 	},
 

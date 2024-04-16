@@ -93,7 +93,9 @@
 								:message-selection-enabled="messageSelectionEnabled"
 								:selected-messages="selectedMessages"
 								:emoji-data-source="emojiDataSource"
+								:allow-copy="allowCopy"
 								@message-added="onMessageAdded"
+								@message-updated="onMessageUpdated"
 								@message-action-handler="messageActionHandler"
 								@open-file="openFile"
 								@open-user-tag="openUserTag"
@@ -229,7 +231,8 @@ export default {
 		usernameOptions: { type: Object, required: true },
 		emojiDataSource: { type: String, default: undefined },
 		disableSending: { type: Boolean, default: false },
-		maxFiles: { type: Number, default: 20 }
+		maxFiles: { type: Number, default: 20 },
+		allowCopy: { type: Boolean, required: true }
 	},
 
 	emits: [
@@ -573,6 +576,11 @@ export default {
 			if (this.showFiles) {
 				this.droppedFiles = event.dataTransfer.files
 			}
+		},
+		onMessageUpdated() {
+			const bottomScroll = this.getBottomScroll(this.$refs.scrollContainer)
+			if (bottomScroll > 60) return
+			this.scrollToBottom()
 		}
 	}
 }
